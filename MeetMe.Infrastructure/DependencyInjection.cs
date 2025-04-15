@@ -1,4 +1,6 @@
-﻿using MeetMe.Infrastructure.Data;
+﻿using MeetMe.Application.Common.Interfaces.Repositories;
+using MeetMe.Infrastructure.Data;
+using MeetMe.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,9 @@ public static class DependencyInjection
     {
         var connString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
+
+        services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<IParticipantRepository, ParticipantRepository>();
         
         return services;
     }

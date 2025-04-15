@@ -1,8 +1,9 @@
-﻿using MeetMe.Domain.Entities;
+﻿using MeetMe.Application.Common.Interfaces.Repositories;
+using MeetMe.Domain.Entities;
 
 namespace MeetMe.Infrastructure.Data.Repositories;
 
-public class ParticipantRepository
+public class ParticipantRepository : IParticipantRepository
 {
     private readonly ApplicationDbContext _context;
 
