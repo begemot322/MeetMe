@@ -42,6 +42,24 @@ public class EventController : Controller
 
         return View(vm);
     }
+    
+    [HttpGet]
+    public IActionResult Join()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Join(JoinEventViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var ev = await _eventService.GetEventByCodeAsync(model.EventCode);
+        
+        return RedirectToAction("AddDates", new { code = model.EventCode, nickname = model.Nickname });
+    }
+
 
     
 }
