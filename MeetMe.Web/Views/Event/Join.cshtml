@@ -1,0 +1,30 @@
+﻿@model JoinEventViewModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Присоединиться к событию</h2>
+
+                    <form asp-action="Join" method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="EventCode" class="form-label">Код события</label>
+                            <input asp-for="EventCode" class="form-control" />
+                            <span asp-validation-for="EventCode" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nickname" class="form-label">Ваш никнейм</label>
+                            <input asp-for="Nickname" class="form-control" />
+                            <span asp-validation-for="Nickname" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Присоединиться</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
