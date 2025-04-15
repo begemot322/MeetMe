@@ -32,7 +32,8 @@ public class EventService
         {
             Nickname = EventDto.CreatorNickname,
             IsCreator = true,
-            Event = newEvent
+            Event = newEvent,
+            IsAgreedWithFixedDate = true
         };
         
         if (EventDto.IsDateRange)
