@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MeetMe.Application\MeetMe.Application.csproj" />
       <ProjectReference Include="..\MeetMe.Domain\MeetMe.Domain.csproj" />
     </ItemGroup>
 
