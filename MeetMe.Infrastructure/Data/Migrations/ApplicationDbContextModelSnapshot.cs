@@ -90,6 +90,9 @@ namespace MeetMe.Infrastructure.Data.Migrations
                     b.Property<int>("EventId")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("IsAgreedWithFixedDate")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsCreator")
                         .HasColumnType("bit");
 
