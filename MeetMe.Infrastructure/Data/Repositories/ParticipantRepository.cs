@@ -14,7 +14,7 @@ public class ParticipantRepository : IParticipantRepository
 
     public async Task AddAsync(Participant participant)
     {
-        _context.Participants.Add(participant);
+        await _context.Participants.AddAsync(participant);
         await _context.SaveChangesAsync();
     }
 }

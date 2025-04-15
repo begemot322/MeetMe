@@ -22,7 +22,7 @@ public class EventRepository : IEventRepository
 
     public async Task AddAsync(Event ev)
     {
-        _context.Events.Add(ev);
+        await _context.Events.AddAsync(ev);
         await _context.SaveChangesAsync();
     }
 }
