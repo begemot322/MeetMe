@@ -26,6 +26,8 @@ public class EventService
             IsDateRange = EventDto.IsDateRange
         };
         
+        await _eventRepository.AddAsync(newEvent);
+
         var creator = new Participant
         {
             Nickname = EventDto.CreatorNickname,
@@ -46,8 +48,17 @@ public class EventService
         }
         
         await _participantRepository.AddAsync(creator);
-        await _eventRepository.AddAsync(newEvent);
 
         return newEvent.Code;
+    }
+
+    public async Task<Event> GetEventByCodeAsync(Guid code)
+    {
+        var ev = await _eventRepository.GetByCodeAsync(code);
+
+        if (ev == null)
+            throw new InvalidOperationException("Amenity with code {code} not found.");
+
+        return ev;
     }
 }
