@@ -1,0 +1,43 @@
+﻿@model CreateEventDto
+
+<h2>Создать событие</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Create" method="post" class="event-form">
+    <div class="form-group">
+        <label for="Title">Название</label>
+        <input asp-for="Title" class="form-control" id="Title"/>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="CreatorNickname">Ваш никнейм</label>
+        <input asp-for="CreatorNickname" class="form-control" id="CreatorNickname"/>
+        <span asp-validation-for="CreatorNickname" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="FixedDate">Фиксированная дата (если есть)</label>
+        <input asp-for="FixedDate" type="datetime-local" class="form-control" id="FixedDate"/>
+    </div>
+
+    <div class="form-group">
+        <label for="IsDateRange">Использовать диапазон дат?</label>
+        <div></div>
+        <input asp-for="IsDateRange" type="checkbox" class="form-check-input mb-3" id="IsDateRange" style="height: 30px;width: 30px;" onchange="toggleDateRangeFields()"/>
+    </div>
+
+    <div id="dateRangeFields" style="display:none;">
+        <div id="dateRangesContainer">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="addDateRange()">Добавить диапазон</button>
+    </div>
+
+    <button type="submit" class="btn btn-success my-3">Создать событие</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/event-create.js"></script>
+}
