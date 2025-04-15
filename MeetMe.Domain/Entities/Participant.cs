@@ -8,6 +8,7 @@ public class Participant
     [Required]
     public string Nickname { get; set; }
     public bool IsCreator { get; set; }
+    public bool? IsAgreedWithFixedDate { get; set; }
 
     public int EventId { get; set; }
     public Event Event { get; set; }
