@@ -1,0 +1,14 @@
+﻿@model SuccessViewModel
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body text-center">
+            <h2 class="card-title mb-4 text-success">Событие «@Model.EventTitle» успешно создано!</h2>
+            <p class="card-text fs-5">Код приглашения:</p>
+            <p>
+                <code class="fs-4">@Model.Code</code>
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-4">Вернуться на главную</a>
+        </div>
+    </div>
+</div>
