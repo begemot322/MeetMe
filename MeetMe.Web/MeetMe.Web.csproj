@@ -13,4 +13,8 @@
       </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MeetMe.Infrastructure\MeetMe.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
