@@ -1,4 +1,5 @@
-﻿using MeetMe.Application.Common.Interfaces.Repositories;
+﻿using MeetMe.Application.Common.Exceptions;
+using MeetMe.Application.Common.Interfaces.Repositories;
 using MeetMe.Application.Dtos;
 using MeetMe.Domain.Entities;
 
@@ -58,8 +59,59 @@ public class EventService
         var ev = await _eventRepository.GetByCodeAsync(code);
 
         if (ev == null)
-            throw new InvalidOperationException("Amenity with code {code} not found.");
+            throw new NotFoundException($"Event with code {code} not found.");
 
         return ev;
     }
+
+    public async Task AddParticipantAsync(CreateParticipantDto dto)
+    {
+        var ev = await _eventRepository.GetByCodeAsync(dto.EventCode);
+    
+        if (ev == null)
+            throw new NotFoundException($"Event with code {dto.EventCode} not found.");
+    
+        var existingParticipant = await _participantRepository
+            .GetByEventIdAndNicknameAsync(ev.Id, dto.Nickname);
+        
+        if (existingParticipant != null)
+        {
+            existingParticipant.IsAgreedWithFixedDate = dto.IsAgreedToFixedDate;
+        
+            existingParticipant.DateRanges.Clear();
+        
+            foreach (var range in dto.DateRanges)
+            {
+                existingParticipant.DateRanges.Add(new DateRange
+                {
+                    StartDate = range.StartDate,
+                    EndDate = range.EndDate
+                });
+            }
+        
+            await _participantRepository.UpdateAsync(existingParticipant);
+        }
+        else
+        {
+            var participant = new Participant
+            {
+                Nickname = dto.Nickname,
+                IsCreator = false,
+                EventId = ev.Id,
+                IsAgreedWithFixedDate = dto.IsAgreedToFixedDate
+            };
+    
+            foreach (var range in dto.DateRanges)
+            {
+                participant.DateRanges.Add(new DateRange
+                {
+                    StartDate = range.StartDate,
+                    EndDate = range.EndDate
+                });
+            }
+    
+            await _participantRepository.AddAsync(participant);
+        }
+    }
+
 }
