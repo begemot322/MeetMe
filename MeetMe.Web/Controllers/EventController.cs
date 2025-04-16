@@ -27,6 +27,7 @@ public class EventController : Controller
             return View(model);
     
         var eventCode = await _eventService.CreateEventAsync(model);
+        TempData["success"] = "Вы успешно добавили событие";
         
         return RedirectToAction("Success", new { code = eventCode });
     }
@@ -86,6 +87,7 @@ public class EventController : Controller
             return View(model);
         
         await _eventService.AddParticipantAsync(model);
+        TempData["success"] = "Вы успешно добавили удобное время";
 
         return RedirectToAction("Index", "Home");
     }
