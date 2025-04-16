@@ -1,0 +1,54 @@
+﻿@model CreateParticipantDto
+
+<h4 class="mb-4">Здравствуйте <strong>@Model.Nickname</strong>, выберите удобную дату</h4>
+<h5>Событие: @ViewBag.Title</h5>
+
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="AddDates" method="post">
+    <input type="hidden" asp-for="EventCode" />
+    <input type="hidden" asp-for="Nickname" />
+
+    @if (ViewBag.FixedDate != null)
+    {
+        <div class="form-check mb-3">
+            <input class="form-check-input" asp-for="IsAgreedToFixedDate" />
+            <label class="form-check-label" asp-for="IsAgreedToFixedDate">
+                Я согласен на участие в событии в фиксированную дату: 
+                <strong>@(((DateTime)ViewBag.FixedDate).ToLocalTime().ToString("g"))</strong>
+            </label>
+        </div>
+    }
+
+    <div id="dateRangesContainer">
+        @for (int i = 0; i < Model.DateRanges.Count; i++)
+        {
+            <div class="date-range mb-3 p-2 border rounded">
+                <div class="mb-2">
+                    <label class="form-label">Дата начала</label>
+                    <input type="datetime-local" class="form-control" 
+                           asp-for="DateRanges[i].StartDate" />
+                    <span asp-validation-for="DateRanges[i].StartDate" class="text-danger"></span>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Дата окончания</label>
+                    <input type="datetime-local" class="form-control" 
+                           asp-for="DateRanges[i].EndDate" />
+                    <span asp-validation-for="DateRanges[i].EndDate" class="text-danger"></span>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" 
+                        onclick="this.parentNode.remove()">Удалить</button>
+            </div>
+        }
+    </div>
+
+    <button type="button" class="btn btn-outline-primary" onclick="addDateRange()">
+        Добавить диапазон
+    </button>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+</form>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script src="~/js/addDateRange.js"></script>
+    }
