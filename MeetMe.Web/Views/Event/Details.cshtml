@@ -1,0 +1,21 @@
+﻿@model Event
+
+
+<h2>@Model.Title</h2>
+<p>Создатель: @Model.CreatorNickname</p>
+<p>Код события: @Model.Code</p>
+
+<h3>Участники и их доступные даты:</h3>
+
+@foreach (var participant in Model.Participants)
+{
+    <div>
+        <h4>@participant.Nickname @(participant.IsCreator ? "(Создатель)" : "")</h4>
+        <ul>
+            @foreach (var range in participant.DateRanges)
+            {
+                <li>@range.StartDate.ToString("g") - @range.EndDate.ToString("g")</li>
+            }
+        </ul>
+    </div>
+}
