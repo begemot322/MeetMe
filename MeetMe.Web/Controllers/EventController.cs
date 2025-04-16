@@ -1,4 +1,5 @@
-﻿using MeetMe.Application.Dtos;
+﻿using MeetMe.Application.Common.Exceptions;
+using MeetMe.Application.Dtos;
 using MeetMe.Application.Services.Implementation;
 using MeetMe.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +60,48 @@ public class EventController : Controller
         
         return RedirectToAction("AddDates", new { code = model.EventCode, nickname = model.Nickname });
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> AddDates(Guid code, string nickname)
+    {
+        var ev = await _eventService.GetEventByCodeAsync(code);
 
+        ViewBag.Title = ev.Title;
+        ViewBag.FixedDate = ev.FixedDate;
+        
+        var participantDto = new CreateParticipantDto
+        {
+            EventCode = code,
+            Nickname = nickname,
+            DateRanges = new List<CreateDateRangeDto>()
+        };
+            
+        return View(participantDto);
+    }
 
+    [HttpPost]
+    public async Task<IActionResult> AddDates(CreateParticipantDto model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+        
+        await _eventService.AddParticipantAsync(model);
+
+        return RedirectToAction("Index", "Home");
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> Details(Guid code)
+    {
+        try
+        {
+            var eventDetails = await _eventService.GetEventByCodeAsync(code);
+            return View(eventDetails);
+        }
+        catch (NotFoundException ex)
+        {
+            return View("EventNotFound", code);
+        }
+    }
     
 }
