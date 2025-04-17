@@ -11,6 +11,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<EventService>();
+        services.AddScoped<UserService>();
         
         services.AddFluentValidationAutoValidation(); 
         services.AddValidatorsFromAssemblyContaining<CreateEventDtoValidator>();
