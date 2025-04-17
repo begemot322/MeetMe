@@ -100,11 +100,41 @@ namespace MeetMe.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Participants");
+                });
+
+            modelBuilder.Entity("MeetMe.Domain.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MeetMe.Domain.Entities.DateRange", b =>
@@ -126,6 +156,10 @@ namespace MeetMe.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MeetMe.Domain.Entities.User", null)
+                        .WithMany("Participants")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Event");
                 });
 
@@ -137,6 +171,11 @@ namespace MeetMe.Infrastructure.Data.Migrations
             modelBuilder.Entity("MeetMe.Domain.Entities.Participant", b =>
                 {
                     b.Navigation("DateRanges");
+                });
+
+            modelBuilder.Entity("MeetMe.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }
