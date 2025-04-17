@@ -1,12 +1,14 @@
 using MeetMe.Application;
 using MeetMe.Infrastructure;
+using MeetMe.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddApplicationServices();
+builder.Services
+    .AddInfrastructureServices(builder.Configuration)
+    .AddApplicationServices()
+    .AddWebServices();
 
 var app = builder.Build();
 
@@ -21,6 +23,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
