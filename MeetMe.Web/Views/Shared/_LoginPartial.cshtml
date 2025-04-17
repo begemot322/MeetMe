@@ -1,0 +1,47 @@
+﻿<ul class="navbar-nav">
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li class="nav-item">
+            <form id="logoutForm" method="post" asp-controller="Auth" asp-action="Logout">
+                <button type="button" class="nav-link btn btn-link border-0" onclick="confirmLogout()">
+                    Logout <i class="bi bi-box-arrow-in-left"></i>
+                </button>
+            </form>
+        </li>
+    }
+
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Auth" asp-action="Login">
+                Login <i class="bi bi-box-arrow-in-right"></i>
+            </a>
+        </li>
+    }
+
+</ul>
+
+
+<script>
+    function confirmLogout()
+    {
+        Swal.fire({
+            title: 'Вы уверены?',
+            text: "Вы собираетесь выйти из аккаунта.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Да, выйти',
+            cancelButtonText: 'Отмена'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logoutForm').submit();
+            }
+        });
+    }
+</script>
