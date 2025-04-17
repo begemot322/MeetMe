@@ -1,4 +1,5 @@
 ﻿using MeetMe.Application.Common.Exceptions;
+using MeetMe.Application.Common.Interfaces.Identity;
 using MeetMe.Application.Common.Interfaces.Repositories;
 using MeetMe.Application.Dtos;
 using MeetMe.Domain.Entities;
@@ -9,16 +10,25 @@ public class EventService
 {
     private readonly IEventRepository _eventRepository;
     private readonly IParticipantRepository _participantRepository;
-    
-    public EventService(IEventRepository eventRepository, 
-        IParticipantRepository participantRepository)
+    private readonly IUserContext _userContext;
+
+    public EventService(
+        IEventRepository eventRepository,
+        IParticipantRepository participantRepository,
+        IUserContext userContext)
     {
         _eventRepository = eventRepository;
         _participantRepository = participantRepository;
+        _userContext = userContext;
     }
 
     public async Task<Guid> CreateEventAsync(CreateEventDto EventDto)
     {
+        var currentUserId = _userContext.GetCurrentUserId();
+
+        if (currentUserId == null)
+            throw new UnauthorizedAccessException("User must be authenticated to create an event.");
+
         var newEvent = new Event
         {
             Title = EventDto.Title,
@@ -34,7 +44,8 @@ public class EventService
             Nickname = EventDto.CreatorNickname,
             IsCreator = true,
             Event = newEvent,
-            IsAgreedWithFixedDate = true
+            IsAgreedWithFixedDate = true,
+            UserId = currentUserId.Value
         };
         
         if (EventDto.IsDateRange)
@@ -93,12 +104,15 @@ public class EventService
         }
         else
         {
+            var currentUserId = _userContext.GetCurrentUserId();
+
             var participant = new Participant
             {
                 Nickname = dto.Nickname,
                 IsCreator = false,
                 EventId = ev.Id,
-                IsAgreedWithFixedDate = dto.IsAgreedToFixedDate
+                IsAgreedWithFixedDate = dto.IsAgreedToFixedDate,
+                UserId = currentUserId 
             };
     
             foreach (var range in dto.DateRanges)
