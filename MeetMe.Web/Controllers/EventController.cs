@@ -89,7 +89,12 @@ public class EventController : Controller
     public async Task<IActionResult> AddDates(CreateParticipantDto model)
     {
         if (!ModelState.IsValid)
+        {
+            var ev = await _eventService.GetEventByIdAsync(model.EventId);
+            ViewBag.Title = ev.Title;
+            ViewBag.FixedDate = ev.FixedDate;
             return View(model);
+        }
         
         await _participantService.AddParticipantAsync(model);
         TempData["success"] = "Вы успешно добавили удобное время";

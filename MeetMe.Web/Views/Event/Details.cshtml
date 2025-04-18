@@ -4,39 +4,71 @@
 @model Event
 @inject IUserContext UserContext
 
-
-<h2>@Model.Title</h2>
-<p>Создатель: @Model.CreatorNickname</p>
-<p>Код события: @Model.Code</p>
-
-<h3>Участники и их доступные даты:</h3>
-
-
-@foreach (var participant in Model.Participants)
-{
-    <div>
-        <h4>@participant.Nickname @(participant.IsCreator ? "(Создатель)" : "")</h4>
-        <ul>
-            @foreach (var range in participant.DateRanges)
-            {
-                <li>@range.StartDate.ToString("g") - @range.EndDate.ToString("g")</li>
-            }
-        </ul>
+<div class="container mt-4">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title">Событие: <strong>@Model.Title</strong></h2>
+            <p class="card-text"><strong>Создатель:</strong> @Model.CreatorNickname</p>
+            <p class="card-text"><strong>Код события:</strong> <span class="badge bg-secondary">@Model.Code</span></p>
+        </div>
     </div>
-}
 
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (Model.FixedDate != null)
+    {
+        <div class="alert alert-info">
+            <h5>Фиксированная дата события:</h5>
+            <p><strong>@Model.FixedDate.Value.ToString("dd.MM.yyyy HH:mm")</strong></p>
+        </div>
+    }
 
-@{
-    var currentUserId = UserContext.GetCurrentUserId();
-    var isCreator = Model.Participants.Any(p => p.IsCreator && p.UserId == currentUserId);
-}
+    <h3 class="mt-4 mb-3">Участники и их доступные даты:</h3>
 
-@if (isCreator)
-{
-    <div>
-        <a asp-action="CalculateBestTime" asp-route-eventId="@Model.Id" class="btn btn-primary">
-            Рассчитать лучшее время
-        </a>
-    </div>
-}
+    @foreach (var participant in Model.Participants)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title d-flex justify-content-between align-items-center">
+                <span>
+                    @participant.Nickname
+                    @if (participant.IsCreator)
+                    {
+                        <span class="badge bg-primary">Создатель</span>
+                    }
+                </span>
+                    @if (Model.FixedDate != null && participant.IsAgreedWithFixedDate.HasValue)
+                    {
+                        @if (participant.IsAgreedWithFixedDate.Value)
+                        {
+                            <span class="badge bg-success">✔ Согласен с датой</span>
+                        }
+                    }
+                </h5>
+
+                <ul class="list-group list-group-flush mt-3">
+                    @foreach (var range in participant.DateRanges)
+                    {
+                        <li class="list-group-item">
+                            @range.StartDate.ToString("g") - @range.EndDate.ToString("g")
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    @{
+        var currentUserId = UserContext.GetCurrentUserId();
+        var isCreator = Model.Participants.Any(p => p.IsCreator && p.UserId == currentUserId);
+    }
+
+    @if (isCreator)
+    {
+        <div class="text-end">
+            <a asp-action="CalculateBestTime" asp-route-eventId="@Model.Id" class="btn btn-success">
+                <i class="bi bi-calendar-check"></i> Рассчитать лучшее время
+            </a>
+        </div>
+    }
+</div>
