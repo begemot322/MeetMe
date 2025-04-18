@@ -6,7 +6,7 @@
 <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
 <form asp-action="AddDates" method="post">
-    <input type="hidden" asp-for="EventCode" />
+    <input type="hidden" asp-for="EventId" />
     <input type="hidden" asp-for="Nickname" />
 
     @if (ViewBag.FixedDate != null)
