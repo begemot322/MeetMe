@@ -1,0 +1,14 @@
+﻿@model EventTimeSuggestionViewModel
+
+<h2>Предложенное время для события</h2>
+
+<div class="alert alert-success">
+    <h4>Лучшее время для встречи:</h4>
+    <p>@Model.SuggestionDto.SuggestedStart.ToString("g") - @Model.SuggestionDto.SuggestedEnd.ToString("g")</p>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-code=@Model.ev.Code class="btn btn-secondary">
+        Вернуться к событию
+    </a>
+</div>
