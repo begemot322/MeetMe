@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Event>
+
+<h2>Мои события</h2>
+
+@if (!Model.Any())
+{
+    <p>Вы ещё не создавали событий.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var ev in Model)
+        {
+            <li class="list-group-item">
+                <a asp-action="Details" asp-route-code="@ev.Code">
+                    @ev.Title (@ev.CreatedAt.ToShortDateString())
+                </a>
+            </li>
+        }
+    </ul>
+}
