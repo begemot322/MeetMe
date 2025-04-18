@@ -3,6 +3,5 @@
 <div class="alert alert-danger mt-5">
     <h2>Событие не найдено</h2>
     <p>Событие с кодом <strong>@Model</strong> не существует или было удалено.</p>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">На главную</a>
-    <a href="@Url.Action("Create")" class="btn btn-success">Создать новое событие</a>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-primary">На главную</a>
 </div>
