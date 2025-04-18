@@ -31,4 +31,13 @@ public class ParticipantRepository : IParticipantRepository
         _context.Participants.Update(participant);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<List<Event>> GetCreatedEventsByUserIdAsync(int? userId)
+    {
+        return await _context.Participants
+            .Where(p => p.UserId == userId && p.IsCreator)
+            .Include(p => p.Event)
+            .Select(p => p.Event)
+            .ToListAsync();
+    }
 }

@@ -8,6 +8,7 @@ public interface IParticipantRepository
     Task<Participant?> GetByEventIdAndNicknameAsync(int eventId, string nickname);
     
     Task UpdateAsync(Participant participant);
+    Task<List<Event>> GetCreatedEventsByUserIdAsync(int? userId);
 
 
 }
