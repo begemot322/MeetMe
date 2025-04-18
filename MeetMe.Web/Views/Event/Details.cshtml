@@ -1,4 +1,8 @@
-﻿@model Event
+﻿@using MeetMe.Application.Common.Interfaces.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model Event
+@inject IUserContext UserContext
 
 
 <h2>@Model.Title</h2>
@@ -6,6 +10,7 @@
 <p>Код события: @Model.Code</p>
 
 <h3>Участники и их доступные даты:</h3>
+
 
 @foreach (var participant in Model.Participants)
 {
@@ -17,5 +22,21 @@
                 <li>@range.StartDate.ToString("g") - @range.EndDate.ToString("g")</li>
             }
         </ul>
+    </div>
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+@{
+    var currentUserId = UserContext.GetCurrentUserId();
+    var isCreator = Model.Participants.Any(p => p.IsCreator && p.UserId == currentUserId);
+}
+
+@if (isCreator)
+{
+    <div>
+        <a asp-action="CalculateBestTime" asp-route-eventId="@Model.Id" class="btn btn-primary">
+            Рассчитать лучшее время
+        </a>
     </div>
 }
