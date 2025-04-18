@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using MeetMe.Application.Services.Implementation;
+using MeetMe.Application.Services.Interfaces;
 using MeetMe.Application.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,8 +11,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped<EventService>();
+        services.AddScoped<IEventService, EventService>();
         services.AddScoped<UserService>();
+        services.AddScoped<IEventTimeCalculationService, EventTimeCalculationService>();
+        services.AddScoped<IParticipantService, ParticipantService>();
         
         services.AddFluentValidationAutoValidation(); 
         services.AddValidatorsFromAssemblyContaining<CreateEventDtoValidator>();
