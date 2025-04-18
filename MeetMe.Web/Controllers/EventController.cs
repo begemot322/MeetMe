@@ -139,4 +139,11 @@ public class EventController : Controller
         return View("Details", eventDetails);
     }
     
+    [HttpGet]
+    public async Task<IActionResult> MyEvents()
+    {
+        var events = await _eventService.GetEventsCreatedByUserAsync();
+        return View(events);
+    }
+    
 }
