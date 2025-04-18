@@ -69,7 +69,7 @@ public class AuthController : Controller
     {
         Response.Cookies.Delete("SecurityCookies");
 
-        return RedirectToAction("Login", "Auth");
+        return RedirectToAction("Index", "Home");
     }
 
 }
