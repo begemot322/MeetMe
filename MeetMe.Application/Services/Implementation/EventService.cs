@@ -95,4 +95,11 @@ public class EventService : IEventService
     {
         return await _timeCalculationService.CalculateBestTime(eventId);
     }
+    
+    public async Task<List<Event>> GetEventsCreatedByUserAsync()
+    {
+        var currentUserId = _userContext.GetCurrentUserId();
+        
+        return await _participantRepository.GetCreatedEventsByUserIdAsync(currentUserId);
+    }
 }

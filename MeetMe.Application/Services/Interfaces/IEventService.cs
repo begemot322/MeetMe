@@ -10,4 +10,5 @@ public interface IEventService
     Task<Event> GetEventByIdAsync(int id);
     Task<Event> GetEventByCodeAsync(Guid code);
     Task<EventTimeSuggestion> CalculateBestTime(int eventId);
+    Task<List<Event>> GetEventsCreatedByUserAsync();
 }
