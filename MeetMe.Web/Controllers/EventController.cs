@@ -3,6 +3,7 @@ using MeetMe.Application.Dtos;
 using MeetMe.Application.Services.Implementation;
 using MeetMe.Application.Services.Interfaces;
 using MeetMe.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetMe.Web.Controllers;
@@ -20,11 +21,13 @@ public class EventController : Controller
         _participantService = participantService;
     }
     
+    [Authorize]
     public IActionResult Create()
     {
         return View();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Create(CreateEventDto model)
     {
@@ -36,7 +39,8 @@ public class EventController : Controller
         
         return RedirectToAction("Success", new { eventId = eventId });
     }
-    
+   
+    [Authorize]
     public async Task<IActionResult> Success(int eventId)
     {
         var ev = await _eventService.GetEventByIdAsync(eventId);
@@ -115,7 +119,8 @@ public class EventController : Controller
             return View("EventNotFound", code);
         }
     }
-    
+   
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> CalculateBestTime(int eventId)
     {
@@ -138,7 +143,8 @@ public class EventController : Controller
         var eventDetails = await _eventService.GetEventByIdAsync(eventId);
         return View("Details", eventDetails);
     }
-    
+
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> MyEvents()
     {
