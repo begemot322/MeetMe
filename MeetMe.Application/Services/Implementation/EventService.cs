@@ -2,27 +2,33 @@
 using MeetMe.Application.Common.Interfaces.Identity;
 using MeetMe.Application.Common.Interfaces.Repositories;
 using MeetMe.Application.Dtos;
+using MeetMe.Application.Services.Interfaces;
+using MeetMe.Application.Services.Models;
 using MeetMe.Domain.Entities;
 
 namespace MeetMe.Application.Services.Implementation;
 
-public class EventService
+public class EventService : IEventService
 {
     private readonly IEventRepository _eventRepository;
     private readonly IParticipantRepository _participantRepository;
     private readonly IUserContext _userContext;
+    private readonly IEventTimeCalculationService _timeCalculationService;
+
 
     public EventService(
         IEventRepository eventRepository,
         IParticipantRepository participantRepository,
-        IUserContext userContext)
+        IUserContext userContext,
+        IEventTimeCalculationService timeCalculationService)
     {
         _eventRepository = eventRepository;
         _participantRepository = participantRepository;
         _userContext = userContext;
+        _timeCalculationService = timeCalculationService;
     }
 
-    public async Task<Guid> CreateEventAsync(CreateEventDto EventDto)
+    public async Task<int> CreateEventAsync(CreateEventDto EventDto)
     {
         var currentUserId = _userContext.GetCurrentUserId();
 
@@ -36,7 +42,7 @@ public class EventService
             FixedDate = EventDto.FixedDate,
             IsDateRange = EventDto.IsDateRange
         };
-        
+
         await _eventRepository.AddAsync(newEvent);
 
         var creator = new Participant
@@ -47,7 +53,7 @@ public class EventService
             IsAgreedWithFixedDate = true,
             UserId = currentUserId.Value
         };
-        
+
         if (EventDto.IsDateRange)
         {
             foreach (var range in EventDto.DateRanges)
@@ -59,12 +65,21 @@ public class EventService
                 });
             }
         }
-        
+
         await _participantRepository.AddAsync(creator);
 
-        return newEvent.Code;
+        return newEvent.Id;
     }
 
+    public async Task<Event> GetEventByIdAsync(int id)
+    {
+        var ev = await _eventRepository.GetByIdAsync(id);
+
+        if (ev == null)
+            throw new NotFoundException($"Event with id {id} not found.");
+
+        return ev;
+    }
     public async Task<Event> GetEventByCodeAsync(Guid code)
     {
         var ev = await _eventRepository.GetByCodeAsync(code);
@@ -74,58 +89,10 @@ public class EventService
 
         return ev;
     }
+    
 
-    public async Task AddParticipantAsync(CreateParticipantDto dto)
+    public async Task<EventTimeSuggestion> CalculateBestTime(int eventId)
     {
-        var ev = await _eventRepository.GetByCodeAsync(dto.EventCode);
-    
-        if (ev == null)
-            throw new NotFoundException($"Event with code {dto.EventCode} not found.");
-    
-        var existingParticipant = await _participantRepository
-            .GetByEventIdAndNicknameAsync(ev.Id, dto.Nickname);
-        
-        if (existingParticipant != null)
-        {
-            existingParticipant.IsAgreedWithFixedDate = dto.IsAgreedToFixedDate;
-        
-            existingParticipant.DateRanges.Clear();
-        
-            foreach (var range in dto.DateRanges)
-            {
-                existingParticipant.DateRanges.Add(new DateRange
-                {
-                    StartDate = range.StartDate,
-                    EndDate = range.EndDate
-                });
-            }
-        
-            await _participantRepository.UpdateAsync(existingParticipant);
-        }
-        else
-        {
-            var currentUserId = _userContext.GetCurrentUserId();
-
-            var participant = new Participant
-            {
-                Nickname = dto.Nickname,
-                IsCreator = false,
-                EventId = ev.Id,
-                IsAgreedWithFixedDate = dto.IsAgreedToFixedDate,
-                UserId = currentUserId 
-            };
-    
-            foreach (var range in dto.DateRanges)
-            {
-                participant.DateRanges.Add(new DateRange
-                {
-                    StartDate = range.StartDate,
-                    EndDate = range.EndDate
-                });
-            }
-    
-            await _participantRepository.AddAsync(participant);
-        }
+        return await _timeCalculationService.CalculateBestTime(eventId);
     }
-
 }
