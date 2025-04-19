@@ -12,20 +12,20 @@ Frontend: Razor Pages, bootstrap, JavaScript
 Проект MeetMe реализован с использованием принципов Чистой архитектуры (Clean Architecture)
 
 Как запустить MeetMe?
-1.Откройте проект в Visual Studio
+1.Откройте проект в Visual Studio.
 
- .Запустите MeetMe.sln
- 
-2.Обновите строку подключения к БД
+Запустите MeetMe.sln
 
- .В файле appsettings.json укажите свои параметры SQL Server
- 
-3.Очистите и соберите решение
+2.Обновите строку подключения к БД.
 
- .ПКМ на решении → Clean
- 
- .ПКМ на решении → Build
- 
-4.Запустите проект
+В файле appsettings.json укажите свои параметры SQL Server
 
- .Нажмите зелёную кнопку ▶ (Start) в Visual Studio
+3.Очистите и соберите решение.
+
+ПКМ на решении → Clean.
+
+ПКМ на решении → Build
+
+4.Запустите проект.
+
+Нажмите зелёную кнопку ▶ (Start) в Visual Studio
