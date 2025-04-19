@@ -13,11 +13,19 @@ Frontend: Razor Pages, bootstrap, JavaScript
 
 Как запустить MeetMe?
 1.Откройте проект в Visual Studio
+
  .Запустите MeetMe.sln
+ 
 2.Обновите строку подключения к БД
+
  .В файле appsettings.json укажите свои параметры SQL Server
+ 
 3.Очистите и соберите решение
+
  .ПКМ на решении → Clean
+ 
  .ПКМ на решении → Build
+ 
 4.Запустите проект
+
  .Нажмите зелёную кнопку ▶ (Start) в Visual Studio
