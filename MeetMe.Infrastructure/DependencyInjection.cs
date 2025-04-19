@@ -34,6 +34,8 @@ public static class DependencyInjection
         services.AddScoped<IParticipantRepository, ParticipantRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         
+        services.AddScoped<DbInitializer>();
+        
         return services;
     }
     
