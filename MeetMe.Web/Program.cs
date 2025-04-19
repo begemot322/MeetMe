@@ -1,5 +1,6 @@
 using MeetMe.Application;
 using MeetMe.Infrastructure;
+using MeetMe.Infrastructure.Data;
 using MeetMe.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,11 @@ builder.Services
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    await app.InitialiseDatabaseAsync();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
