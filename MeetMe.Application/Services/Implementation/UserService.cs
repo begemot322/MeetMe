@@ -2,12 +2,13 @@
 using MeetMe.Application.Common.Interfaces.Identity;
 using MeetMe.Application.Common.Interfaces.Repositories;
 using MeetMe.Application.Dtos.Authentication;
+using MeetMe.Application.Services.Interfaces;
 using MeetMe.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace MeetMe.Application.Services.Implementation;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUserRepository _userRepository;
@@ -41,16 +42,16 @@ public class UserService
         await _userRepository.AddAsync(user);
     }
 
-    public async Task<string> LoginAsync(string email, string password)
+    public async Task<string> LoginAsync(LoginUserRequest loginUserRequest)
     {
-        var user = await _userRepository.GetByExpressionAsync(u => u.Email == email);
+        var user = await _userRepository.GetByExpressionAsync(u => u.Email == loginUserRequest.Email);
 
         if (user == null)
         {
             throw new Exception("Неверный логин или пароль.");
         }
 
-        var result = _passwordHasher.Verify(password, user.PasswordHash);
+        var result = _passwordHasher.Verify(loginUserRequest.Password, user.PasswordHash);
 
 
         if (result == false)

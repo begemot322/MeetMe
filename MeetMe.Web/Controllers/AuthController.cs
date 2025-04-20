@@ -1,14 +1,15 @@
 ﻿using MeetMe.Application.Dtos.Authentication;
 using MeetMe.Application.Services.Implementation;
+using MeetMe.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetMe.Web.Controllers;
 
 public class AuthController : Controller
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public AuthController(UserService userService)
+    public AuthController(IUserService userService)
     {
         _userService = userService;
     }
@@ -51,7 +52,7 @@ public class AuthController : Controller
         {
             try
             {
-                string token = await _userService.LoginAsync(request.Email, request.Password);
+                string token = await _userService.LoginAsync(request);
                 Response.Cookies.Append("SecurityCookies", token);
                 TempData["success"] = "Вы успешно вошли в аккаунт";
                 return RedirectToAction("Index", "Home");
